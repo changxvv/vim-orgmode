@@ -53,6 +53,20 @@ if (s:conceal_aggressively == 1)
     hi link org_border_undl org_underline
 endif
 
+" Priority Tags: Enhanced highlighting for [#A], [#B], [#C], [#D] {{{1
+" These priority tags use colors from the VS Code org theme
+" Priority tags can appear in headings and list items
+syntax match org_priority_a /\[#A\]/ contained
+syntax match org_priority_b /\[#B\]/ contained
+syntax match org_priority_c /\[#C\]/ contained
+syntax match org_priority_d /\[#D\]/ contained
+
+" Define colors matching VS Code theme
+hi org_priority_a guifg=#FF0000 ctermfg=196 gui=bold cterm=bold
+hi org_priority_b guifg=#FFA500 ctermfg=208 gui=bold cterm=bold
+hi org_priority_c guifg=#FFD700 ctermfg=220 gui=bold cterm=bold
+hi org_priority_d guifg=#00FFFF ctermfg=51 gui=bold cterm=bold
+
 " Headings: {{{1
 " Load Settings: {{{2
 if !exists('g:org_heading_highlight_colors')
@@ -71,7 +85,7 @@ endif
 unlet! s:i s:j s:contains
 let s:i = 1
 let s:j = len(g:org_heading_highlight_colors)
-let s:contains = ' contains=org_timestamp,org_timestamp_inactive,org_subtask_percent,org_subtask_number,org_subtask_percent_100,org_subtask_number_all,org_list_checkbox,org_bold,org_italic,org_underline,org_code,org_verbatim'
+let s:contains = ' contains=org_timestamp,org_timestamp_inactive,org_subtask_percent,org_subtask_number,org_subtask_percent_100,org_subtask_number_all,org_list_checkbox,org_bold,org_italic,org_underline,org_code,org_verbatim,org_priority_a,org_priority_b,org_priority_c,org_priority_d'
 if g:org_heading_shade_leading_stars == 1
 	let s:contains = s:contains . ',org_shade_stars'
 	syntax match org_shade_stars /^\*\{2,\}/me=e-1 contained
@@ -86,6 +100,15 @@ while s:i <= g:org_heading_highlight_levels
 	let s:i += 1
 endwhile
 unlet! s:i s:j s:contains
+
+hi org_heading1 guifg=#569CD6 ctermfg=75 gui=bold cterm=bold
+hi org_heading2 guifg=#C586C0 ctermfg=176 gui=bold cterm=bold
+hi org_heading3 guifg=#4EC9B0 ctermfg=79 gui=bold cterm=bold
+hi org_heading4 guifg=#CE9178 ctermfg=173 gui=bold cterm=bold
+hi org_heading5 guifg=#D7BA7D ctermfg=180 gui=bold cterm=bold
+hi org_heading6 guifg=#9CDCFE ctermfg=117 gui=bold cterm=bold
+hi org_heading7 guifg=#569CD6 ctermfg=75 gui=bold cterm=bold
+hi org_heading8 guifg=#C586C0 ctermfg=176 gui=bold cterm=bold
 
 " Todo Keywords: {{{1
 " Load Settings: {{{2
@@ -269,6 +292,9 @@ hi def link org_deadline_scheduled PreProc
 syn match org_table /^\s*|.*/ contains=org_timestamp,org_timestamp_inactive,hyperlink,org_table_separator,org_table_horizontal_line
 syn match org_table_separator /\(^\s*|[-+]\+|\?\||\)/ contained
 hi def link org_table_separator Type
+" Enhanced table header highlighting
+syn match org_table_header_separator /^\s*|[-+]\+|.*$/ contained
+hi org_table_header_separator guifg=#569CD6 ctermfg=75 gui=bold cterm=bold
 
 " Hyperlinks: {{{1
 syntax match hyperlink	"\[\{2}[^][]*\(\]\[[^][]*\)\?\]\{2}" contains=hyperlinkBracketsLeft,hyperlinkURL,hyperlinkBracketsRight containedin=ALL
@@ -313,8 +339,25 @@ hi def link org_list_unordered Identifier
 syntax match org_list_def /.*\s\+::/ contained
 hi def link org_list_def PreProc
 
-syntax match org_list_item /.*$/ contained contains=org_subtask_percent,org_subtask_number,org_subtask_percent_100,org_subtask_number_all,org_list_checkbox,org_bold,org_italic,org_underline,org_code,org_verbatim,org_timestamp,org_timestamp_inactive,org_list_def
-syntax match org_list_checkbox /\[[ X-]]/ contained
+" Enhanced list item to include priority tags
+syntax match org_list_item /.*$/ contained contains=org_subtask_percent,org_subtask_number,org_subtask_percent_100,org_subtask_number_all,org_list_checkbox,org_checkbox_checked,org_checkbox_unchecked,org_checkbox_partial,org_bold,org_italic,org_underline,org_code,org_verbatim,org_timestamp,org_timestamp_inactive,org_list_def,org_priority_a,org_priority_b,org_priority_c,org_priority_d
+
+" Enhanced Checkbox Highlighting with different states {{{2
+" Remove the generic checkbox pattern and add specific ones
+syntax clear org_list_checkbox
+
+" Checked checkboxes [x] or [X]
+syntax match org_checkbox_checked /\[[xX]\]/ contained
+hi org_checkbox_checked guifg=#32CD32 ctermfg=77 gui=bold cterm=bold
+
+" Unchecked checkboxes [ ]
+syntax match org_checkbox_unchecked /\[\s\]/ contained
+hi org_checkbox_unchecked guifg=#FF8C00 ctermfg=208 gui=bold cterm=bold
+
+" Partial checkboxes [-]
+syntax match org_checkbox_partial /\[-\]/ contained
+hi org_checkbox_partial guifg=#FFD700 ctermfg=220 gui=bold cterm=bold
+
 hi def link org_list_bullet Identifier
 hi def link org_list_checkbox     PreProc
 
