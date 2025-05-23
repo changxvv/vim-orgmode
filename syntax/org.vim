@@ -11,6 +11,8 @@ else
     let s:conceal_aggressively=0
 endif
 
+let b:current_syntax = 'org'
+
 " Inline markup {{{1
 " *bold*, /italic/, _underline_, +strike-through+, =code=, ~verbatim~
 " Note:
